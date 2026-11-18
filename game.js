@@ -501,6 +501,13 @@
   }
 
   function initDom() {
+    // 런타임 DOM 상태 확인용 로깅
+    console.log('[initDom] DOM 요소 조회 결과:');
+    console.log('  loading-overlay:', $('#loading-overlay'));
+    console.log('  btn-start:', $('#btn-start'));
+    console.log('  lobby-view:', $('#lobby-view'));
+    console.log('  keyboard-container:', $('#keyboard-container'));
+    console.log('  sheet-modal-overlay:', $('#sheet-modal-overlay'));
     dom.loadingOverlay = $('#loading-overlay');
     dom.lobbyView = $('#lobby-view');
     dom.gameView = $('#game-view');
