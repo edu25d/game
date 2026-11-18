@@ -354,23 +354,27 @@
   }
 
   function doOSMDRender(musicXml, si) {
+    // 로딩 플레이스홀더 제거 — OSMD가 렌더링한 캔버스가 그대로 컨테이너에 남는다
+    dom.sheetContainer.innerHTML = '';
     try {
       const osmd = new OpenSheetMusicDisplay('sheet-container', {
-        position: 'relative',
         autoResize: true,
         drawBarNumbers: false,
       });
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(musicXml, 'application/xml');
+      if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+        dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 XML을 파싱할 수 없습니다</div>';
+        return;
+      }
       osmd.load(xmlDoc.documentElement).then(() => {
         osmd.render();
-        dom.sheetContainer.innerHTML = '';
-        const canvas = osmd.getCanvas();
-        if (canvas) dom.sheetContainer.appendChild(canvas);
       }).catch(err => {
+        console.error('[OSMD] load/render 실패:', err);
         dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보를 표시할 수 없습니다</div>';
       });
     } catch (e) {
+      console.error('[OSMD] 생성자 실패:', e);
       dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 렌더링 실패</div>';
     }
   }
