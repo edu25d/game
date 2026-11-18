@@ -58,7 +58,7 @@
   const renderCombo = () => {
     if (state.combo >= 2) {
       dom.comboChip.classList.add('visible');
-      dom.comboValue.textContent = 'x' + state.combo;
+      dom.comboValue.textContent = String(state.combo);
     } else {
       dom.comboChip.classList.remove('visible');
     }
@@ -81,11 +81,13 @@
       if (i === ci) d.classList.add('current');
       dom.phraseProgress.appendChild(d);
     }
+    dom.phraseProgress.classList.add('visible');
   };
 
   const setMessage = (emoji, text, cls = '') => {
     dom.stateMessage.innerHTML = '<span class="emoji">' + emoji + '</span>' + text;
     dom.stateMessage.className = 'state-message ' + cls;
+    dom.stateMessage.classList.add('visible');
   };
 
   const updateStageUI = (si) => {

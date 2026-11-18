@@ -433,23 +433,35 @@ body {
 
 .stage-chip {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  background: var(--cyan-dim);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  border-radius: 20px;
-  font-size: 0.7rem;
+  justify-content: center;
+  gap: 0px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--cyan) 0%, #0891b2 100%);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  border-radius: 10px;
+  color: white;
   font-weight: 700;
-  color: var(--cyan);
   white-space: nowrap;
   flex-shrink: 0;
-  letter-spacing: 0.05em;
+  box-shadow: 0 3px 8px rgba(6, 182, 212, 0.25);
+  min-width: 50px;
 }
 
-.stage-chip .stage-num {
-  font-size: 0.85rem;
-  font-weight: 800;
+.stage-chip .stage-label {
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stage-chip .stage-number {
+  font-size: 1.1rem;
+  font-weight: 900;
+  line-height: 1.15;
 }
 
 .song-title {
@@ -603,44 +615,75 @@ body {
 }
 
 .score-display {
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 12px 4px 10px;
+  background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #b45309 100%);
+  border-radius: 8px;
+  box-shadow:
+    0 2px 8px rgba(245, 158, 11, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  font-size: 0.9rem;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--text-inverse);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   letter-spacing: -0.02em;
+  flex-shrink: 0;
 }
 
 .score-display .score-label {
-  font-size: 0.55rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: rgba(11, 15, 25, 0.7);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-right: 4px;
+  letter-spacing: 0.08em;
+}
+
+.score-display .score-colon {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: rgba(11, 15, 25, 0.8);
+}
+
+.score-display #score-value {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--text-inverse);
 }
 
 .combo-chip {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  background: var(--violet-dim);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  gap: 3px;
+  padding: 3px 9px;
+  background: linear-gradient(135deg, var(--violet) 0%, #7c3aed 100%);
+  border: 1px solid rgba(139, 92, 246, 0.4);
   border-radius: 14px;
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--violet);
+  color: white;
   white-space: nowrap;
   opacity: 0;
   transform: scale(0.8);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
 }
 
 .combo-chip.visible {
   opacity: 1;
   transform: scale(1);
+}
+
+.combo-chip .combo-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
 }
 
 .combo-chip .combo-num {
@@ -676,6 +719,18 @@ body {
   color: var(--text-secondary);
   text-align: center;
   animation: fade-in 0.3s ease;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.state-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .state-message .emoji {
@@ -708,6 +763,17 @@ body {
   gap: 2px;
   flex-wrap: wrap;
   justify-content: center;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.phrase-progress.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .phrase-dot {

@@ -152,8 +152,8 @@ const KEYBOARD = (() => {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        padding-top: 5px;
+        justify-content: flex-end;
+        padding-bottom: 6px;
       `;
       el.appendChild(label);
       keysRow.appendChild(el);
@@ -197,7 +197,6 @@ const KEYBOARD = (() => {
         // offset: 흰건반 너비의 65% 지점 (검은건반 중심)
         const leftPx = bk.whiteIndex * keyWidth + keyWidth * bk.offset - bw / 2;
         el.style.left = `${leftPx}px`;
-        el.style.bottom = '0px';
       }
 
       el.addEventListener('mousedown', (e) => {
