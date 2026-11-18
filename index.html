@@ -63,7 +63,7 @@
 
     <!-- ===== 인게임 화면 ===== -->
     <div id="game-view" class="view">
-      <!-- HUD -->
+      <!-- HUD (상단: 스트림라인 요소 + 하단: 상태 메시지/프레이즈 진행) -->
       <div class="game-hud">
         <div class="hud-top">
           <div id="stage-chip" class="stage-chip">
@@ -92,18 +92,16 @@
             <span class="combo-fire">🔥</span>
           </div>
         </div>
-      </div>
-
-      <!-- 중앙 상태 영역 -->
-      <div class="game-center">
-        <div id="state-message" class="state-message">
-          <span class="emoji">🎧</span>
-          게임을 시작하면 첫 멜로디가 재생됩니다
+        <div class="hud-bottom">
+          <div id="state-message" class="state-message">
+            <span class="emoji">🎧</span>
+            게임을 시작하면 첫 멜로디가 재생됩니다
+          </div>
+          <div id="phrase-progress" class="phrase-progress"></div>
         </div>
-        <div id="phrase-progress" class="phrase-progress"></div>
       </div>
 
-      <!-- 건반 영역 -->
+      <!-- 건반 영역 (HUD 아래 구분선 이하는 건반만 가득) -->
       <div class="keyboard-section">
         <div id="keyboard-container"></div>
       </div>
