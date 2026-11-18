@@ -20,6 +20,8 @@
     sheetChances: 1,
     maxSheetChances: 2,
     usedSheetChanceThisStage: false,
+    sheetModalPlayedOnce: false,
+    sheetModalCanClose: false,
     score: 0,
     combo: 0,
     maxCombo: 0,
@@ -157,6 +159,8 @@
     state.isMelodyPlaying = false;
     state.isAcceptingInput = false;
     state.pendingNoteIndex = 0;
+    state.sheetModalPlayedOnce = false;
+    state.sheetModalCanClose = false;
     renderHearts();
     renderScore();
     renderCombo();
@@ -334,24 +338,26 @@
   function openSheetModal(si) {
     const stage = STAGES.getStage(si);
     if (!stage) return;
+    dom.sheetModalTitle.textContent = stage.title;
     dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">오선보를 렌더링하는 중...</div>';
     dom.sheetModalOverlay.classList.add('open');
+    state.sheetModalPlayedOnce = false;
+    state.sheetModalCanClose = false;
     const musicXml = STAGES.getPhraseMusicXml(si, state.currentPhraseIndex);
     if (!musicXml) {
       dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">표시할 음표가 없습니다</div>';
       return;
     }
-    loadOSMD(musicXml, si);
+    // OSMD 렌더링 완료 후 playPhraseDemo가 자동으로 호출된다 (doOSMDRender 내부)
+    loadOSMD(musicXml, si, state.currentPhraseIndex);
   }
 
-  function loadOSMD(musicXml, si) {
+  function loadOSMD(musicXml, si, phraseIndex) {
     if (window.OpenSheetMusicDisplay || window.opensheetmusicdisplay) {
-      // OSMD UMD 빌드는 window.opensheetmusicdisplay(소문자)로 모듈 객체를 노출하며,
-      // 실제 생성자는 그 객체의 OpenSheetMusicDisplay 프로퍼티다.
       if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
         window.OpenSheetMusicDisplay = window.opensheetmusicdisplay.OpenSheetMusicDisplay;
       }
-      doOSMDRender(musicXml, si);
+      doOSMDRender(musicXml, si, phraseIndex);
     } else {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@0.7.4/build/opensheetmusicdisplay.min.js';
@@ -359,7 +365,7 @@
         if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
           window.OpenSheetMusicDisplay = window.opensheetmusicdisplay.OpenSheetMusicDisplay;
         }
-        doOSMDRender(musicXml, si);
+        doOSMDRender(musicXml, si, phraseIndex);
       };
       script.onerror = () => {
         dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 엔진을 불러올 수 없습니다.</div>';
@@ -368,7 +374,7 @@
     }
   }
 
-  function doOSMDRender(musicXml, si) {
+  function doOSMDRender(musicXml, si, phraseIndex) {
     // 로딩 플레이스홀더 제거 — OSMD가 렌더링한 캔버스가 그대로 컨테이너에 남는다
     dom.sheetContainer.innerHTML = '';
     try {
@@ -376,10 +382,12 @@
         autoResize: true,
         drawBarNumbers: false,
       });
-      // OSMD load()는 MusicXML 문자열도 직접 받으므로 원시 문자열을 전달
-      // (Element 노드 전달 시 'partwise 요소 없음' 오류가 발생하는 경우 대응)
       osmd.load(musicXml).then(() => {
         osmd.render();
+        // 악보 렌더링 완료 후 현재 프레이즈 자동 연주 시작
+        if (si !== undefined && phraseIndex !== undefined) {
+          playPhraseDemo(si, phraseIndex);
+        }
       }).catch(err => {
         console.error('[OSMD] load/render 실패:', err);
         console.error('[OSMD] musicXml 미리보기:', musicXml.slice(0, 300));
@@ -395,22 +403,22 @@
     dom.sheetModalOverlay.classList.remove('open');
   }
 
-  async function playSheetDemo(si) {
-    const stage = STAGES.getStage(si);
-    if (!stage) return;
-    const fullMelody = STAGES.getFullMelody(si);
-    if (!fullMelody || fullMelody.length === 0) return;
+  // 현재 프레이즈의 노트만 재생 (악보 찬스 모달 자동 연주용)
+  async function playPhraseDemo(si, phraseIndex) {
+    const phraseNotes = STAGES.getPhraseNotes(si, phraseIndex);
+    if (!phraseNotes || phraseNotes.length === 0) return;
     state.isMelodyPlaying = true;
     setListeningBadge('playing', '\uD83D\uDD0A 모범 연주 중...');
-    setMessage('\uD83D\uDD0A', '모범 연주를 들어보세요', '');
-    await Synth.playMelody(fullMelody, (i, midi) => {
+    setMessage('\uD83D\uDD0A', '악보를 들어보세요', '');
+    await Synth.playMelody(phraseNotes, (i, midi) => {
       if (KEYBOARD) KEYBOARD.flashKey(midi, '#f59e0b', 300);
     });
-    const td = fullMelody.reduce((a, n) => a + n.duration + (n.gap || 0.08), 0);
+    const td = phraseNotes.reduce((a, n) => a + n.duration + (n.gap || 0.08), 0);
     setTimeout(() => {
       state.isMelodyPlaying = false;
-      setListeningBadge('listening', '\uD83D\uDD0D 이제 연주해보세요!');
-      setMessage('\uD83E\uDD29', '이제 직접 연주해보세요!', 'instruction');
+      state.sheetModalPlayedOnce = true;
+      setListeningBadge('listening', '\uD83D\uDD0D 연주 완료 — 클릭하여 다시 듣거나 바깥을 터치해 닫으세요');
+      setMessage('\uD83D\uDD0D', '연주 완료', 'instruction');
     }, td * 1000 + 200);
   }
 
@@ -546,9 +554,9 @@
     dom.stateMessage = document.getElementById('state-message');
     dom.phraseProgress = document.getElementById('phrase-progress');
     dom.sheetModalOverlay = document.getElementById('sheet-modal-overlay');
-    dom.sheetModalClose = document.getElementById('sheet-modal-close');
+    dom.sheetModalBody = document.getElementById('sheet-modal-body');
+    dom.sheetModalTitle = document.getElementById('sheet-modal-title');
     dom.sheetContainer = document.getElementById('sheet-container');
-    dom.sheetDemoBtn = document.getElementById('sheet-demo-btn');
     dom.resultTierBadge = document.getElementById('tier-badge');
     dom.resultTierName = document.getElementById('tier-name');
     dom.resultTierDesc = document.getElementById('tier-desc');
@@ -587,11 +595,22 @@
       startGame();
     });
     dom.chanceBtn.addEventListener('click', () => useSheetChance());
-    dom.sheetModalClose.addEventListener('click', closeSheetModal);
     dom.sheetModalOverlay.addEventListener('click', (e) => {
-      if (e.target === dom.sheetModalOverlay) closeSheetModal();
+      if (e.target === dom.sheetModalOverlay && state.sheetModalPlayedOnce) {
+        closeSheetModal();
+      }
     });
-    dom.sheetDemoBtn.addEventListener('click', () => playSheetDemo(state.currentStageIndex));
+    dom.sheetModalBody.addEventListener('click', () => {
+      if (!state.sheetModalPlayedOnce) return;       // 첫 연주 중이면 무시
+      if (!state.sheetModalCanClose) {
+        // 첫 연주 완료 후 첫 내부 클릭: 해당 프레이즈 1회 추가 연주
+        state.sheetModalCanClose = true;
+        playPhraseDemo(state.currentStageIndex, state.currentPhraseIndex);
+        return;
+      }
+      // 추가 연주 후: 이후 내부 클릭은 모달 닫기
+      closeSheetModal();
+    });
     dom.btnSaveScore.addEventListener('click', saveScore);
     dom.nameInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') saveScore();

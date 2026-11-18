@@ -1027,63 +1027,43 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.sheet-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  flex-shrink: 0;
-}
-
-.sheet-modal-header h3 {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--amber);
-  letter-spacing: 0.04em;
-}
-
-.sheet-modal-close {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-surface);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.15s ease;
-}
-
-.sheet-modal-close:hover {
-  background: var(--bg-card-hover);
-  color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
 .sheet-modal-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 12px;
+  padding: 16px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+}
+
+.sheet-modal-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  padding: 4px 0 8px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .sheet-modal-body #sheet-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
   min-height: 200px;
+  max-height: 460px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eef2f8;
+  background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
 }
 
 .sheet-modal-body .sheet-placeholder {
@@ -1092,42 +1072,8 @@ body {
   text-align: center;
   padding: 20px;
 }
-
-.sheet-modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  flex-shrink: 0;
-}
-
-.sheet-modal-footer .demo-note {
   font-size: 0.7rem;
   color: var(--text-muted);
-}
-
-.sheet-modal-footer .demo-note strong {
-  color: var(--mint);
-  font-weight: 600;
-}
-
-.sheet-demo-btn {
-  padding: 6px 16px;
-  background: var(--mint-dim);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 8px;
-  color: var(--mint);
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s ease;
-}
-
-.sheet-demo-btn:hover {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.4);
 }
 
 /* ============================================================
