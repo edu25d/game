@@ -502,6 +502,9 @@
 
   function initDom() {
     // 런타임 DOM 상태 확인용 로깅
+    console.log('[initDom] $ 함수 정체:', $);
+    console.log('[initDom] document.getElementById 직접 호출:', document.getElementById('loading-overlay'));
+    console.log('[initDom] $로 loading-overlay 조회:', $('#loading-overlay'));
     console.log('[initDom] DOM 요소 조회 결과:');
     console.log('  loading-overlay:', $('#loading-overlay'));
     console.log('  btn-start:', $('#btn-start'));
