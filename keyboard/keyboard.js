@@ -63,17 +63,18 @@ const KEYBOARD = (() => {
   function render() {
     if (!container) return;
 
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
-
-    // container 크기가 유효하지 않으면 레이아웃 완료 후 재시도 (최대 10회)
-    if (!containerWidth || !containerHeight) {
+    // container 실제 크기가 유효하면 사용, 아니면 재시도 후 기본값
+    let containerWidth = container.clientWidth;
+    let containerHeight = container.clientHeight;
+    if (containerWidth <= 0 || containerHeight <= 0) {
       render._retryCount = (render._retryCount || 0) + 1;
       if (render._retryCount <= 10) {
         requestAnimationFrame(render);
         return;
       }
       render._retryCount = 0;
+      containerWidth = 400;
+      containerHeight = 300;
     }
 
     // 가용 높이: 상하 padding(4px×2)만 제외, 라벨은 건반 내부에 포함되므로 별도 제외하지 않음
