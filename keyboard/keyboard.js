@@ -94,9 +94,17 @@ const KEYBOARD = (() => {
     let keyWidth = targetKeyHeight / 1.7;
     // 컨테이너 너비에 11개 건반이 모두 들어가야 하는 최대 너비 (최소 28px)
     const maxKeyWidthByWidth = Math.max(28, containerWidth / WHITE_KEYS.length);
-    // width가 containerWidth를 초과하면 width 기준으로 제한하고 height도 재계산
+    let keyHeight;
+    // width가 containerWidth를 초과하면 width 기준으로 제한하고, keyHeight가 containerHeight에
+    // 근접하도록 비율을 조정하여 세로 공간을 최대한 채움
     if (keyWidth > maxKeyWidthByWidth) {
       keyWidth = maxKeyWidthByWidth;
+      // width 기준으로 제한됨에 따라, 높이를 containerHeight에 가깝게 맞추기 위해 비율 조정
+      // ratio = targetKeyHeight / keyWidth → keyHeight = keyWidth * ratio ≈ targetKeyHeight
+      const adjustedRatio = targetKeyHeight / keyWidth;
+      keyHeight = keyWidth * adjustedRatio; // ≈ targetKeyHeight (containerHeight - 8에 근접)
+    } else {
+      keyHeight = keyWidth * 1.7;
     }
 
     const wrapper = document.createElement('div');
@@ -113,7 +121,6 @@ const KEYBOARD = (() => {
     `;
 
     // 건반 행 (흰건반 + 검은건반)
-    const keyHeight = keyWidth * 1.7;
     const keysRow = document.createElement('div');
     keysRow.id = 'keys-row';
     keysRow.style.cssText = `
