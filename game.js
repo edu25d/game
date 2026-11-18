@@ -575,9 +575,5 @@
     console.log('[game] init 완료 — 로비 화면 표시');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  document.addEventListener('DOMContentLoaded', init);
 })();
