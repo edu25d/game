@@ -545,8 +545,13 @@
   }
 
   function init() {
+    console.log('[init] 호출 — document.body.childElementCount:', document.body?.childElementCount);
+    console.log('[init] loading-overlay 존재 여부:', !!document.getElementById('loading-overlay'));
+    console.log('[init] btn-start 존재 여부:', !!document.getElementById('btn-start'));
+    console.log('[init] lobby-view 존재 여부:', !!document.getElementById('lobby-view'));
     // DOM 요소가 아직 없으면 재시도
     if (!document.getElementById('loading-overlay')) {
+      console.log('[init] loading-overlay 없음 — 50ms 후 재시도');
       setTimeout(init, 50);
       return;
     }
