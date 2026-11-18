@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+
 /**
  * style.css — 시크 네오팝 벡터 (Chic Neo-Pop Vector) 스타일
  * 배경: 딥 나이트 슬레이트 | 악센트: 시안/민트/코랄/앰버/바이올렛
- * 순백색 건반 + '도'(C4,C5) 오렌지 포인트 + 검은건반 3D 입체 그림자
+ * 순백색 건반 + 도(C4,C5) 오렌지 포인트 + 검은건반 3D 입체 그림자
  */
 
 /* ============================================================
@@ -105,13 +108,7 @@ body {
 }
 
 /* ============================================================
-   3. 폰트 로딩
-   ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
-
-/* ============================================================
-   4. 앱 컨테이너 (가로 레이아웃)
+   3. 앱 컨테이너 (가로 레이아웃)
    ============================================================ */
 .app-container {
   display: flex;
