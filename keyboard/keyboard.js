@@ -60,7 +60,14 @@ const KEYBOARD = (() => {
 
     const isLandscape = window.matchMedia('(orientation: landscape)').matches;
     const containerWidth = container.clientWidth || 400;
-    const keyWidth = Math.max(30, Math.min(38, containerWidth / WHITE_KEYS.length));
+    const containerHeight = container.clientHeight || 300;
+
+    // 너비 기준: 11개 흰건반이 들어갈 수 있는 최소 폭 (30~48px)
+    const widthBased = Math.max(30, Math.min(48, containerWidth / WHITE_KEYS.length));
+    // 높이 기준: 건반 + 상단 라벨 영역이 들어갈 수 있는 최대 폭 (가용 높이의 약 45%를 건반 너비 환산)
+    const heightBased = Math.max(30, Math.min(60, (containerHeight - 28) / 2.0));
+    // 두 기준 중 더 큰 쪽으로 결정하여 건반이 최대한 크게 보이도록
+    const keyWidth = Math.max(widthBased, heightBased);
 
     // 흰건반 총 너비 기반 레이아웃
     const whiteTotal = keyWidth * WHITE_KEYS.length;
@@ -78,6 +85,7 @@ const KEYBOARD = (() => {
     `;
 
     // 건반 행 (흰건반 + 검은건반)
+    const keyHeight = keyWidth * 1.7;
     const keysRow = document.createElement('div');
     keysRow.id = 'keys-row';
     keysRow.style.cssText = `
@@ -87,23 +95,47 @@ const KEYBOARD = (() => {
       justify-content: center;
       width: fit-content;
       position: relative;
-      height: ${keyWidth * 1.82}px;
+      height: ${keyHeight}px;
       margin: 0 auto;
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
     `;
 
-    // 흰건반 렌더링
+    // 흰건반 렌더링 (라벨을 건반 위에 포함)
     WHITE_KEYS.forEach((key, idx) => {
       const el = document.createElement('div');
       el.className = 'white-key';
       el.dataset.midi = key.midi;
       el.dataset.note = key.note;
       el.dataset.index = idx;
+
+      // 키 내부에 라벨 span 포함 (계이름만, 음이름 제외)
+      const label = document.createElement('span');
+      label.className = 'key-label';
+      if (key.isDo) {
+        label.style.cssText = `
+          color: #f59e0b;
+          text-shadow: 0 1px 2px rgba(245,158,11,0.4);
+          font-size: ${Math.max(11, keyWidth * 0.35)}px;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          padding-bottom: 2px;
+        `;
+      } else {
+        label.style.cssText = `
+          color: rgba(80,90,120,0.85);
+          font-size: ${Math.max(11, keyWidth * 0.35)}px;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          padding-bottom: 2px;
+        `;
+      }
+      label.textContent = key.name;
+
       el.style.cssText = `
         width: ${keyWidth}px;
-        height: ${keyWidth * 1.82}px;
+        height: ${keyHeight}px;
         background: linear-gradient(180deg, #ffffff 0%, #f0f4ff 85%, #e8ecf4 100%);
         border-radius: 0 0 8px 8px;
         border: 1px solid rgba(255,255,255,0.8);
@@ -119,9 +151,10 @@ const KEYBOARD = (() => {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end;
-        padding-bottom: 6px;
+        justify-content: flex-start;
+        padding-top: 5px;
       `;
+      el.appendChild(label);
       keysRow.appendChild(el);
     });
 
@@ -135,7 +168,7 @@ const KEYBOARD = (() => {
       el.dataset.index = WHITE_KEYS.length + TOTAL_BLACK; // 고유 인덱스
 
       const bw = Math.max(16, keyWidth * 0.58);
-      const bh = keyWidth * 1.18;
+      const bh = Math.max(16, keyHeight * 0.56);
 
       el.style.cssText = `
         width: ${bw}px;
@@ -179,58 +212,7 @@ const KEYBOARD = (() => {
       keysRow.appendChild(el);
     });
 
-    // 계이름 라벨
-    const labelRow = document.createElement('div');
-    labelRow.id = 'key-labels';
-    labelRow.style.cssText = `
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      margin-top: 4px;
-      user-select: none;
-      -webkit-user-select: none;
-    `;
-
-    WHITE_KEYS.forEach((key, idx) => {
-      const el = document.createElement('span');
-      el.className = 'key-label';
-      el.dataset.midi = key.midi;
-      const isDo = key.isDo;
-
-      el.style.cssText = `
-        width: ${keyWidth}px;
-        text-align: center;
-        font-size: ${Math.max(11, keyWidth * 0.35)}px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        padding-top: 2px;
-        transition: opacity 0.25s ease, color 0.15s ease;
-        flex-shrink: 0;
-      `;
-
-      if (isDo) {
-        // '도' 오렌지 포인트
-        el.style.color = '#f59e0b';
-        el.style.textShadow = '0 1px 2px rgba(245,158,11,0.4)';
-        el.innerHTML = `
-          <span style="opacity:0.7; font-size:0.65em; font-weight:400; display:block; margin-bottom:1px;">${key.note}</span>
-          <span style="font-size:1.1em;">${key.name}</span>
-        `;
-      } else {
-        el.style.color = 'rgba(80,90,120,0.85)';
-        el.innerHTML = `
-          <span style="opacity:0.5; font-size:0.55em; font-weight:400; display:block; margin-bottom:2px;">${key.note}</span>
-          ${key.name}
-        `;
-      }
-
-      labelRow.appendChild(el);
-    });
-
     wrapper.appendChild(keysRow);
-    wrapper.appendChild(labelRow);
 
     // 기존 내용 대체
     container.innerHTML = '';
@@ -347,11 +329,11 @@ const KEYBOARD = (() => {
   // ── 계이름 라벨 표시/숨김 ──────────────────────────────────────────
   function setLabelsVisible(visible) {
     showLabels = visible;
-    const labelRow = document.getElementById('key-labels');
-    if (labelRow) {
-      labelRow.style.opacity = visible ? '1' : '0';
-      labelRow.style.pointerEvents = visible ? 'auto' : 'none';
-    }
+    const labels = document.querySelectorAll('.key-label');
+    labels.forEach(label => {
+      label.style.opacity = visible ? '1' : '0';
+      label.style.pointerEvents = visible ? 'auto' : 'none';
+    });
   }
 
   function isLabelsVisible() {
