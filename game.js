@@ -503,6 +503,8 @@
   function initDom() {
     dom.loadingOverlay = document.getElementById('loading-overlay');
     dom.lobbyView = document.getElementById('lobby-view');
+    dom.rankingList = document.getElementById('ranking-list');
+    dom.rankingSourceBadge = document.getElementById('ranking-source-badge');
     dom.gameView = document.getElementById('game-view');
     dom.resultView = document.getElementById('result-view');
     dom.btnStart = document.getElementById('btn-start');
