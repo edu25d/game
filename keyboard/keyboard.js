@@ -24,21 +24,25 @@ const KEYBOARD = (() => {
 
   /**
    * 검은건반 정의: [앞 흰건반 인덱스, 음명, MIDI 번호, 반음 오프셋]
-   * B3~C5, C5~E5 구간 검은건반
-   * 피아노 건반 배열 규칙에 따라 각 검은건반은 해당 흰건반 위에 위치
+   * B3~E5 구간 검은건반 (총 8개)
+   * 피아노 건반 배열 규칙에 따라 각 검은건반은 두 흰건반 사이 중앙에 위치
+   * 오프셋 0.5 = 해당 흰건반 너비의 50% 지점 (두 흰건반 사이 중앙)
+   * 첫 번째 흰건반(B3) 왼쪽의 A#3은 화면 밖에 있으므로 검은건반 반쪽만 왼쪽에 표시
    */
   const BLACK_KEYS = [
+    // B3 왼쪽: A#3-B3 사이 검은건반 (화면에는 오른쪽 절반만 표시)
+    { whiteIndex: 0, name: 'A#3', midi: 58, offset: 0 },  // B3 왼쪽 경계에 맞춰 반쪽 표시
     // C4-D4 사이
-    { whiteIndex: 1, name: 'C#4', midi: 61, offset: 0.5 },  // C4 위 (C#4)
-    { whiteIndex: 2, name: 'D#4', midi: 63, offset: 0.5 },  // D4 위 (D#4)
+    { whiteIndex: 1, name: 'C#4', midi: 61, offset: 0.5 },  // 도와 레 사이
+    { whiteIndex: 2, name: 'D#4', midi: 63, offset: 0.5 },  // 레와 미 사이
     // F4-G4 사이
-    { whiteIndex: 4, name: 'F#4', midi: 66, offset: 0.5 },  // F4 위 (F#4)
-    { whiteIndex: 5, name: 'G#4', midi: 68, offset: 0.5 },  // G4 위 (G#4)
+    { whiteIndex: 4, name: 'F#4', midi: 66, offset: 0.5 },  // 파와 솔 사이
+    { whiteIndex: 5, name: 'G#4', midi: 68, offset: 0.5 },  // 솔과 라 사이
     // A4-B4 사이
-    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 0.5 },  // A4 위 (A#4)
+    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 0.5 },  // 라와 시 사이
     // C5-D5 사이
-    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 0.5 },  // C5 위 (C#5)
-    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 0.5 },  // D5 위 (D#5)
+    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 0.5 },  // 도와 레 사이
+    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 0.5 },  // 레와 미 사이
   ];
 
   const TOTAL_BLACK = BLACK_KEYS.length;
