@@ -25,24 +25,24 @@ const KEYBOARD = (() => {
   /**
    * 검은건반 정의: [앞 흰건반 인덱스, 음명, MIDI 번호, 반음 오프셋]
    * B3~E5 구간 검은건반 (총 8개)
-   * 피아노 건반 배열 규칙에 따라 각 검은건반은 두 흰건반 사이 중앙에 위치
-   * 오프셋 0.5 = 해당 흰건반 너비의 50% 지점 (두 흰건반 사이 중앙)
-   * 첫 번째 흰건반(B3) 왼쪽의 A#3은 화면 밖에 있으므로 검은건반 반쪽만 왼쪽에 표시
+   * 피아노 건반 배열 규칙에 따라 각 검은건반은 두 흰건반 사이 경계에 위치
+   * 오프셋 1 = 해당 흰건반의 오른쪽 경계 (다음 흰건반과의 경계) — 두 흰건반 사이 중앙
+   * 첫 번째 흰건반(B3) 왼쪽의 A#3은 화면 왼쪽에 오른쪽 절반만 표시 (특수 처리)
    */
   const BLACK_KEYS = [
-    // B3 왼쪽: A#3-B3 사이 검은건반 (화면에는 오른쪽 절반만 표시)
-    { whiteIndex: 0, name: 'A#3', midi: 58, offset: 0 },  // B3 왼쪽 경계에 맞춰 반쪽 표시
+    // B3 왼쪽: A#3-B3 사이 검은건반 (화면에는 오른쪽 절반만 표시, 특수 처리)
+    { whiteIndex: 0, name: 'A#3', midi: 58, offset: 1 },  // B3 왼쪽 경계, 오른쪽 절반만 표시
     // C4-D4 사이
-    { whiteIndex: 1, name: 'C#4', midi: 61, offset: 0.5 },  // 도와 레 사이
-    { whiteIndex: 2, name: 'D#4', midi: 63, offset: 0.5 },  // 레와 미 사이
+    { whiteIndex: 1, name: 'C#4', midi: 61, offset: 1 },  // 도와 레 사이 경계
+    { whiteIndex: 2, name: 'D#4', midi: 63, offset: 1 },  // 레와 미 사이 경계
     // F4-G4 사이
-    { whiteIndex: 4, name: 'F#4', midi: 66, offset: 0.5 },  // 파와 솔 사이
-    { whiteIndex: 5, name: 'G#4', midi: 68, offset: 0.5 },  // 솔과 라 사이
+    { whiteIndex: 4, name: 'F#4', midi: 66, offset: 1 },  // 파와 솔 사이 경계
+    { whiteIndex: 5, name: 'G#4', midi: 68, offset: 1 },  // 솔과 라 사이 경계
     // A4-B4 사이
-    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 0.5 },  // 라와 시 사이
+    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 1 },  // 라와 시 사이 경계
     // C5-D5 사이
-    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 0.5 },  // 도와 레 사이
-    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 0.5 },  // 레와 미 사이
+    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 1 },  // 도와 레 사이 경계
+    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 1 },  // 레와 미 사이 경계
   ];
 
   const TOTAL_BLACK = BLACK_KEYS.length;
@@ -70,12 +70,14 @@ const KEYBOARD = (() => {
     const availableHeight = containerHeight - 8;
     // 건반 높이 = 가용 높이 (세로 공간 최대한 활용)
     const targetKeyHeight = Math.max(80, availableHeight);
-    // 건반 비율(1.7) 기준 너비
-    const targetKeyWidthByHeight = targetKeyHeight / 1.7;
+    // 우선 height 기준으로 keyWidth 결정 (세로 공간 최대한 활용)
+    let keyWidth = targetKeyHeight / 1.7;
     // 컨테이너 너비에 11개 건반이 모두 들어가야 하는 최대 너비 (최소 28px)
     const maxKeyWidthByWidth = Math.max(28, containerWidth / WHITE_KEYS.length);
-    // 두 기준 중 작은 쪽 선택: 높이는 목표대로, 너비는 컨테이너 초과 방지
-    const keyWidth = Math.min(targetKeyWidthByHeight, maxKeyWidthByWidth);
+    // width가 containerWidth를 초과하면 width 기준으로 제한하고 height도 재계산
+    if (keyWidth > maxKeyWidthByWidth) {
+      keyWidth = maxKeyWidthByWidth;
+    }
 
     const wrapper = document.createElement('div');
     wrapper.id = 'keyboard-wrapper';
@@ -173,7 +175,9 @@ const KEYBOARD = (() => {
       el.dataset.whiteIndex = bk.whiteIndex;
       el.dataset.index = WHITE_KEYS.length + TOTAL_BLACK; // 고유 인덱스
 
-      const bw = Math.max(16, keyWidth * 0.58);
+      // 검은건반 너비·높이 계산 (A#3는 오른쪽 절반만 표시하므로 너비 절반)
+      const isHalfKey = bk.midi === 58; // A#3: B3 왼쪽에 오른쪽 절반만 표시
+      const bw = isHalfKey ? Math.max(16, keyWidth * 0.58 / 2) : Math.max(16, keyWidth * 0.58);
       const bh = Math.max(16, keyHeight * 0.56);
 
       el.style.cssText = `
@@ -189,19 +193,21 @@ const KEYBOARD = (() => {
           0 3px 5px rgba(0,0,0,0.55),
           0 1px 2px rgba(0,0,0,0.8),
           inset 0 -2px 3px rgba(80,80,120,0.3);
-        transform: translateX(-50%);
         transition: transform 0.06s ease, box-shadow 0.06s ease;
         touch-action: none;
       `;
 
-      // 검은건반 위치: 해당 흰건반 기준으로 offset 적용
-      const targetWhite = keysRow.children[bk.whiteIndex];
-      if (targetWhite) {
-        const rect = targetWhite.getBoundingClientRect();
-        const parentRect = keysRow.getBoundingClientRect();
-        // offset: 흰건반 너비의 65% 지점 (검은건반 중심)
-        const leftPx = bk.whiteIndex * keyWidth + keyWidth * bk.offset - bw / 2;
-        el.style.left = `${leftPx}px`;
+      // 검은건반 위치: 두 흰건반 사이 경계에 검은건반 중심이 오도록 계산
+      // left = (whiteIndex + 1) * keyWidth - bw / 2 → 검은건반 왼쪽 경계
+      // (흰건반 right 경계 = (whiteIndex+1) * keyWidth 에 검은건반 중심 위치)
+      const leftPx = (bk.whiteIndex + 1) * keyWidth - bw / 2;
+      el.style.left = `${leftPx}px`;
+
+      // A#3(B3 왼쪽): 오른쪽 절반만 표시되도록 왼쪽 경계를 keysRow 왼쪽(0)에 맞춤
+      // 이미 bw가 절반이고 left = keyWidth - bw/2 이므로, 왼쪽 일부가 keysRow 밖으로 나가
+      // 오른쪽 절반만 화면에 표시됨
+      if (isHalfKey) {
+        el.style.left = '0px';
       }
 
       el.addEventListener('mousedown', (e) => {
