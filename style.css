@@ -1009,7 +1009,7 @@ body {
 }
 
 .sheet-modal {
-  background: var(--bg-card);
+  background: var(--bg-card-hover);
   border: 1px solid rgba(6, 182, 212, 0.2);
   border-radius: 0;
   box-shadow: var(--shadow-modal);
@@ -1081,10 +1081,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #eef2f8;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .sheet-modal-body .sheet-placeholder {
-  color: var(--text-muted);
+  color: #64748b;
   font-size: 0.8rem;
   text-align: center;
   padding: 20px;

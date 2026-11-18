@@ -489,6 +489,77 @@ const STAGES = (() => {
     return new Set(phrase.map(n => n.midi));
   }
 
+  // 현재 프레이즈의 노트 배열로부터 OSMD 렌더링용 MusicXML 문자열을 생성한다.
+  // stages.js의 고정 musicXml 필드(미니 샘플) 대신 동적 렌더링에 사용한다.
+  function getPhraseMusicXml(stageIndex, phraseIndex) {
+    const notes = getPhraseNotes(stageIndex, phraseIndex);
+    if (notes.length === 0) return '';
+
+    const DIVISIONS = 4;
+    const BEATS = 4;
+    const BEAT_TYPE = 4;
+
+    function midiToPitch(midi) {
+      const names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const octave = Math.floor(midi / 12) - 1;
+      return { step: names[midi % 12], octave };
+    }
+
+    function durationToType(duration) {
+      // duration은 박(beat) 단위. 4/4 박자 기준
+      if (duration >= 0.45) return 'half';
+      if (duration <= 0.32) return 'eighth';
+      return 'quarter';
+    }
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.1">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Piano</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>${DIVISIONS}</divisions>
+        <key>
+          <fifths>0</fifths>
+          <mode>major</mode>
+        </key>
+        <time>
+          <beats>${BEATS}</beats>
+          <beat-type>${BEAT_TYPE}</beat-type>
+        </time>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
+`;
+
+    notes.forEach(n => {
+      const { step, octave } = midiToPitch(n.midi);
+      const durDiv = Math.max(1, Math.round(n.duration * DIVISIONS));
+      xml += `
+      <note>
+        <pitch>
+          <step>${step}</step>
+          <octave>${octave}</octave>
+        </pitch>
+        <duration>${durDiv}</duration>
+        <type>${durationToType(n.duration)}</type>
+      </note>`;
+    });
+
+    xml += `
+    </measure>
+  </part>
+</score-partwise>`;
+    return xml;
+  }
+
   // 스테이지 메타정보 조회
   function getStage(stageIndex) {
     return STAGES_ARRAY[stageIndex];
@@ -503,6 +574,7 @@ const STAGES = (() => {
     getPhraseNotes,
     getFullMelody,
     getCorrectMidiSet,
+    getPhraseMusicXml,
     getStage,
     getStageCount,
   };

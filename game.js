@@ -336,7 +336,12 @@
     if (!stage) return;
     dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">오선보를 렌더링하는 중...</div>';
     dom.sheetModalOverlay.classList.add('open');
-    loadOSMD(stage.musicXml, si);
+    const musicXml = STAGES.getPhraseMusicXml(si, state.currentPhraseIndex);
+    if (!musicXml) {
+      dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">표시할 음표가 없습니다</div>';
+      return;
+    }
+    loadOSMD(musicXml, si);
   }
 
   function loadOSMD(musicXml, si) {
