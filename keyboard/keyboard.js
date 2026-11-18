@@ -66,6 +66,14 @@ const KEYBOARD = (() => {
     // container 실제 크기가 유효하면 사용, 아니면 재시도 후 기본값
     let containerWidth = container.clientWidth;
     let containerHeight = container.clientHeight;
+    console.log('[keyboard.render] container 크기:', containerWidth, 'x', containerHeight,
+      '재시도:', render._retryCount || 0);
+
+    // 디버깅: container의 computed style height도 확인
+    const computedStyle = window.getComputedStyle(container);
+    console.log('[keyboard.render] container computed height:', computedStyle.height,
+      'parent computed height:', window.getComputedStyle(container.parentElement).height);
+
     if (containerWidth <= 0 || containerHeight <= 0) {
       render._retryCount = (render._retryCount || 0) + 1;
       if (render._retryCount <= 30) {
@@ -75,6 +83,7 @@ const KEYBOARD = (() => {
       render._retryCount = 0;
       containerWidth = 400;
       containerHeight = 300;
+      console.log('[keyboard.render] 기본값 사용:', containerWidth, 'x', containerHeight);
     }
 
     // 가용 높이: 상하 padding(4px×2)만 제외, 라벨은 건반 내부에 포함되므로 별도 제외하지 않음
@@ -239,6 +248,12 @@ const KEYBOARD = (() => {
     // 기존 내용 대체
     container.innerHTML = '';
     container.appendChild(wrapper);
+
+    // 디버깅: 렌더링 후 wrapper와 keysRow의 실제 높이 확인
+    console.log('[keyboard.render] 렌더링 후 - wrapper 높이:', wrapper.getBoundingClientRect().height,
+      'keysRow 높이:', keysRow.getBoundingClientRect().height,
+      'container 높이:', container.getBoundingClientRect().height,
+      'keyWidth:', keyWidth, 'keyHeight:', keyHeight);
 
     // ── 이벤트 바인딩 ────────────────────────────────────────────────
     const whiteEls = keysRow.querySelectorAll('.white-key');
