@@ -182,11 +182,11 @@
 
   </div>
 
-  <!-- ===== 스크립트 ===== -->
-  <script src="audio/synth.js"></script>
-  <script src="keyboard/keyboard.js"></script>
-  <script src="stages.js"></script>
-  <script src="supabase.js"></script>
-  <script src="game.js"></script>
+  <!-- ===== 스크립트 (defer: HTML 파싱 완료 후 실행, DOM 요소 존재 보장) ===== -->
+  <script src="audio/synth.js" defer></script>
+  <script src="keyboard/keyboard.js" defer></script>
+  <script src="stages.js" defer></script>
+  <script src="supabase.js" defer></script>
+  <script src="game.js" defer></script>
 </body>
 </html>
