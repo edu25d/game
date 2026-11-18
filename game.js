@@ -535,7 +535,6 @@
     dom.resultCleared = document.getElementById('result-cleared');
     dom.nameInput = document.getElementById('name-input');
     dom.resultSaveStatus = document.getElementById('result-save-status');
-    dom.btnFullscreen = document.getElementById('btn-fullscreen');
   }
 
   function init() {
@@ -576,18 +575,6 @@
     });
     dom.btnRetry.addEventListener('click', retryGame);
     dom.btnShare.addEventListener('click', shareResult);
-    if (dom.btnFullscreen) {
-      dom.btnFullscreen.addEventListener('click', () => {
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-          if (document.exitFullscreen) document.exitFullscreen();
-          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        } else {
-          const el = document.documentElement;
-          if (el.requestFullscreen) el.requestFullscreen();
-          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        }
-      });
-    }
     window.addEventListener('resize', () => {
       if (KEYBOARD) KEYBOARD.handleResize();
     });
