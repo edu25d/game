@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
+  <defs>
+    <!-- 배경 원형 그라데이션: 딥 나이트 슬레이트 + 시안/바이올렛 광택 -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#141c30"/>
+      <stop offset="100%" stop-color="#0b0f19"/>
+    </radialGradient>
+    <!-- 캐릭터 몸통 셀셰이딩: 민트 → 딥 -->
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a3a"/>
+      <stop offset="100%" stop-color="#0f2428"/>
+    </linearGradient>
+    <!-- 헤드폰 컵 광택 -->
+    <linearGradient id="cupGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <!-- 바이올렛 액센트 글로우 -->
+    <radialGradient id="glowViolet" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 배경 원형 -->
+  <circle cx="60" cy="60" r="56" fill="url(#bgGrad)" stroke="#06b6d4" stroke-opacity="0.25" stroke-width="1.5"/>
+
+  <!-- 바이올렛 글로우 (배경 안쪽) -->
+  <circle cx="60" cy="60" r="48" fill="url(#glowViolet)"/>
+
+  <!-- ── 캐릭터: 전신 실루엣 (건반 위에 손을 올린 포즈) ── -->
+
+  <!-- 목 -->
+  <rect x="54" y="34" width="12" height="8" rx="4" fill="url(#bodyGrad)"/>
+
+  <!-- 머리 -->
+  <ellipse cx="60" cy="26" rx="16" ry="18" fill="url(#bodyGrad)" stroke="#8b5cf6" stroke-width="1.5"/>
+
+  <!-- 얼굴 라인 (미니멀) -->
+  <!-- 눈 -->
+  <circle cx="53" cy="24" r="1.8" fill="#06b6d4"/>
+  <circle cx="67" cy="24" r="1.8" fill="#06b6d4"/>
+  <!-- 입 (살짝 미소) -->
+  <path d="M54 30 Q60 33 66 30" fill="none" stroke="#8b5cf6" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- ── 헤드폰 ── -->
+  <!-- 헤드밴드 -->
+  <path d="M42 22 Q60 8 78 22" fill="none" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"/>
+  <!-- 왼쪽 컵 -->
+  <rect x="36" y="18" width="12" height="18" rx="5" fill="url(#cupGrad)" stroke="#06b6d4" stroke-width="1.2"/>
+  <rect x="38" y="22" width="8" height="4" rx="2" fill="#0b0f19" opacity="0.4"/>
+  <!-- 오른쪽 컵 -->
+  <rect x="72" y="18" width="12" height="18" rx="5" fill="url(#cupGrad)" stroke="#06b6d4" stroke-width="1.2"/>
+  <rect x="74" y="22" width="8" height="4" rx="2" fill="#0b0f19" opacity="0.4"/>
+  <!-- 컵 연결 패드 -->
+  <ellipse cx="60" cy="24" rx="6" ry="3" fill="#1a3a3a" stroke="#8b5cf6" stroke-width="1"/>
+
+  <!-- ── 몸통 ── -->
+  <path d="M46 42 Q44 60 48 80 L72 80 Q76 60 74 42 Z"
+        fill="url(#bodyGrad)" stroke="#8b5cf6" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- 몸통 셀셰이딩 (왼쪽 그림자) -->
+  <path d="M46 42 Q44 60 48 80 L56 80 Q54 60 54 42 Z"
+        fill="#0a1a1e" opacity="0.4"/>
+
+  <!-- 옷/소매 라인 -->
+  <path d="M46 52 Q60 56 74 52" fill="none" stroke="#10b981" stroke-width="1" stroke-opacity="0.6" stroke-linecap="round"/>
+  <path d="M50 64 Q60 67 70 64" fill="none" stroke="#10b981" stroke-width="1" stroke-opacity="0.4" stroke-linecap="round"/>
+
+  <!-- ── 건반 위로 뻗은 두 손 ── -->
+  <!-- 왼쪽 팔 → 왼쪽 건반 -->
+  <path d="M48 64 Q38 72 30 78" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M48 64 Q38 72 30 78" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5"/>
+  <!-- 왼쪽 손 (건반 터치) -->
+  <ellipse cx="28" cy="80" rx="6" ry="4" fill="url(#bodyGrad)" stroke="#8b5cf6" stroke-width="1.2"/>
+
+  <!-- 오른쪽 팔 → 오른쪽 건반 -->
+  <path d="M72 64 Q82 72 90 78" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M72 64 Q82 72 90 78" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5"/>
+  <!-- 오른쪽 손 -->
+  <ellipse cx="92" cy="80" rx="6" ry="4" fill="url(#bodyGrad)" stroke="#8b5cf6" stroke-width="1.2"/>
+
+  <!-- ── 하단 건반 힌트 (흰건반 3개) ── -->
+  <rect x="22" y="86" width="12" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+  <rect x="36" y="86" width="12" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+  <rect x="50" y="86" width="12" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+  <rect x="64" y="86" width="12" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+  <rect x="78" y="86" width="12" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+  <!-- 건반 사이 검은건반 힌트 (2개) -->
+  <rect x="30" y="86" width="6" height="4" rx="1" fill="#1a1a2e"/>
+  <rect x="72" y="86" width="6" height="4" rx="1" fill="#1a1a2e"/>
+
+  <!-- ── 액센트 장식: 시안 점선 원형 (외곽 테두리) ── -->
+  <circle cx="60" cy="60" r="56" fill="none" stroke="#06b6d4" stroke-width="0.5" stroke-dasharray="3 5" stroke-opacity="0.4"/>
+
+  <!-- ── 하단 앰버 점 (플랜.md '도' 오렌지 포인트 오마주) ── -->
+  <circle cx="60" cy="108" r="2.5" fill="#f59e0b" opacity="0.8"/>
+</svg>

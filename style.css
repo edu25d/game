@@ -392,12 +392,13 @@ body {
   gap: 0;
 }
 
-/* ── HUD (상단 18%) ──────────────────────────────────────────────── */
+/* ── HUD (상단 18%) — 1라인 일체형 스트림라인 HUD ─────────────────── */
 .game-hud {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 16px 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
   background: linear-gradient(180deg, rgba(13, 19, 34, 0.95) 0%, rgba(11, 15, 25, 0.7) 100%);
   border-bottom: 1px solid rgba(6, 182, 212, 0.12);
   flex-shrink: 0;
@@ -647,6 +648,24 @@ body {
   position: relative;
 }
 
+/* 2D 벡터 캐릭터 엠블럼 (plan.md §1.4) */
+.character-emblem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.character-emblem img {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 4px 12px rgba(6, 182, 212, 0.25));
+  transition: filter 0.2s ease;
+}
+.character-emblem img:hover {
+  filter: drop-shadow(0 4px 16px rgba(6, 182, 212, 0.4));
+}
+
 .state-message {
   font-size: 0.9rem;
   font-weight: 500;
@@ -756,17 +775,14 @@ body {
   justify-content: center;
   width: fit-content;
   position: relative;
-  height: 280px;
   margin: 0 auto;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
 }
 
-/* 흰건반 */
+/* 흰건반 — 너비·높이는 keyboard.js가 인라인 스타일로 설정 */
 .white-key {
-  width: 34px;
-  height: 280px;
   background: linear-gradient(180deg,
     var(--key-white-grad-start) 0%,
     var(--key-white-grad-mid) 85%,
@@ -959,7 +975,7 @@ body {
 .sheet-modal {
   background: var(--bg-card);
   border: 1px solid rgba(6, 182, 212, 0.2);
-  border-radius: 12px;
+  border-radius: 0;
   box-shadow: var(--shadow-modal);
   width: 100%;
   max-width: 420px;
@@ -1432,8 +1448,5 @@ body {
 }
 
 @media (min-width: 768px) {
-  #keys-row { height: 320px; }
-  .white-key { width: 40px; height: 320px; }
-  .black-key { height: 192px; }
-  #key-labels .key-label { width: 40px; font-size: 13px; }
+  #key-labels .key-label { font-size: 13px; }
 }
