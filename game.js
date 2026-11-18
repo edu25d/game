@@ -549,7 +549,7 @@
     STAGES = window.STAGES;
     SupabaseRank = window.SupabaseRank;
     if (!Synth || !KEYBOARD || !STAGES) {
-      dom.loadingOverlay.classList.add('hidden');
+      if (dom.loadingOverlay) dom.loadingOverlay.classList.add('hidden');
       document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--coral);font-family:sans-serif;">게임 모듈을 로드할 수 없습니다.</div>';
       return;
     }
@@ -578,7 +578,7 @@
     window.addEventListener('resize', () => {
       if (KEYBOARD) KEYBOARD.handleResize();
     });
-    dom.loadingOverlay.classList.add('hidden');
+    if (dom.loadingOverlay) dom.loadingOverlay.classList.add('hidden');
     loadRankings();
     console.log('[game] init 완료 — 로비 화면 표시');
   }

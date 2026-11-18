@@ -401,3 +401,4 @@ const KEYBOARD = (() => {
 if (typeof exportModules === 'function') {
   exportModules('keyboard', KEYBOARD);
 }
+window.KEYBOARD = KEYBOARD;

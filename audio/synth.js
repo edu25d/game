@@ -326,3 +326,4 @@ const Synth = (() => {
 if (typeof exportModules === 'function') {
   exportModules('synth', Synth);
 }
+window.Synth = Synth;

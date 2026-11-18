@@ -512,3 +512,4 @@ const STAGES = (() => {
 if (typeof exportModules === 'function') {
   exportModules('stages', STAGES);
 }
+window.STAGES = STAGES;
