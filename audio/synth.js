@@ -9,7 +9,7 @@ const Synth = (() => {
   const BASE_FREQ = 440;
   const A4_MIDI = 69;
 
-  function getContext() {
+  async function getContext() {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       masterGain = ctx.createGain();
@@ -17,7 +17,7 @@ const Synth = (() => {
       masterGain.connect(ctx.destination);
     }
     if (ctx.state === 'suspended') {
-      ctx.resume();
+      await ctx.resume();
     }
     return ctx;
   }
@@ -32,8 +32,8 @@ const Synth = (() => {
    * @param {number} duration - 재생 시간 (초)
    * @param {object} opts - { velocity, detune }
    */
-  function playNote(midi, duration = 0.5, opts = {}) {
-    const c = getContext();
+  async function playNote(midi, duration = 0.5, opts = {}) {
+    const c = await getContext();
     const freq = midiToFreq(midi);
     const vel = opts.velocity ?? 0.7;
     const detuneVal = opts.detune ?? 0;
@@ -89,8 +89,8 @@ const Synth = (() => {
   /**
    * 짧은 타격음 (건반 터치 피드백)
    */
-  function playKeyTap(midi) {
-    const c = getContext();
+  async function playKeyTap(midi) {
+    const c = await getContext();
     const freq = midiToFreq(midi);
     const now = c.currentTime;
 
@@ -111,8 +111,8 @@ const Synth = (() => {
   /**
    * 정답음: 따뜻한 장3화음 아르페지오 상향
    */
-  function playCorrect() {
-    const c = getContext();
+  async function playCorrect() {
+    const c = await getContext();
     const now = c.currentTime;
     const baseFreq = midiToFreq(60); // C4
 
@@ -137,8 +137,8 @@ const Synth = (() => {
   /**
    * 오답음: 낮고 거친 디소넌트 버즈
    */
-  function playWrong() {
-    const c = getContext();
+  async function playWrong() {
+    const c = await getContext();
     const now = c.currentTime;
 
     // 디소넌트: 단2도 + 트라이톤 조합
@@ -171,9 +171,9 @@ const Synth = (() => {
    * @param {function} onNoteEnd - 각 노트 종료 시 호출
    * @returns {number} 총 재생 시간 (초)
    */
-  function playMelody(melody, onNoteEnd) {
+  async function playMelody(melody, onNoteEnd) {
     if (!melody || melody.length === 0) return 0;
-    const c = getContext();
+    const c = await getContext();
     const now = c.currentTime;
     let t = 0;
 
@@ -226,8 +226,8 @@ const Synth = (() => {
   /**
    * 레벨업/클리어 효과음: 상승하는 아르페지오 (neo-pop feel)
    */
-  function playLevelUp() {
-    const c = getContext();
+  async function playLevelUp() {
+    const c = await getContext();
     const now = c.currentTime;
     const base = midiToFreq(52); // B3
 
@@ -257,8 +257,8 @@ const Synth = (() => {
   /**
    * 게임 오버 효과음: 하향 디소넌트
    */
-  function playGameOver() {
-    const c = getContext();
+  async function playGameOver() {
+    const c = await getContext();
     const now = c.currentTime;
     const base = midiToFreq(50);
 
@@ -288,8 +288,8 @@ const Synth = (() => {
   /**
    * 콤보 점화 효과음: 짧은 치립
    */
-  function playComboFlare() {
-    const c = getContext();
+  async function playComboFlare() {
+    const c = await getContext();
     const now = c.currentTime;
     const freq = midiToFreq(72);
 

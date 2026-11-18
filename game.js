@@ -162,6 +162,8 @@
     renderCombo();
     renderChanceBtn();
     showView('game-view');
+    // 게임 뷰가 표시된 후 건반을 다시 렌더링해야 컨테이너 크기를 올바르게 읽음
+    if (KEYBOARD) KEYBOARD.render();
     updateStageUI(state.currentStageIndex);
     renderPhraseProgress(state.currentStageIndex, 0);
     setMessage('\uD83E\uDD2F', '첫 멜로디를 듣고 따라 연주해보세요!', 'instruction');
@@ -202,20 +204,20 @@
 
   async function playMelodySequence(notes) {
     state.isMelodyPlaying = true;
-    const totalDuration = Synth.playMelody(notes, (i, midi) => {
+    const totalDuration = await Synth.playMelody(notes, (i, midi) => {
       if (KEYBOARD) KEYBOARD.flashKey(midi, '#06b6d4', 250);
     });
     await sleep(totalDuration * 1000 + 200);
     state.isMelodyPlaying = false;
   }
 
-  function onKeyDownHandler(midi, result) {
+  async function onKeyDownHandler(midi, result) {
     if (!state.isAcceptingInput || state.isMelodyPlaying) return;
-    if (result === 'correct') handleCorrectNote(midi);
-    else if (result === 'wrong') handleWrongNote(midi);
+    if (result === 'correct') await handleCorrectNote(midi);
+    else if (result === 'wrong') await handleWrongNote(midi);
   }
 
-  function handleCorrectNote(midi) {
+  async function handleCorrectNote(midi) {
     const phraseNotes = STAGES.getPhraseNotes(state.currentStageIndex, state.currentPhraseIndex);
     if (!phraseNotes || state.pendingNoteIndex >= phraseNotes.length) return;
     const expectedMidi = phraseNotes[state.pendingNoteIndex].midi;
@@ -226,14 +228,14 @@
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
       const cm = 1 + (state.combo - 1) * 0.15;
       state.score += Math.round(100 * cm);
-      if (state.combo >= 3) Synth.playComboFlare();
-      else Synth.playCorrect();
+      if (state.combo >= 3) await Synth.playComboFlare();
+      else await Synth.playCorrect();
       if (KEYBOARD) KEYBOARD.flashKey(midi, '#10b981', 200);
       renderScore();
       renderCombo();
       state.pendingNoteIndex++;
       if (state.pendingNoteIndex >= phraseNotes.length) {
-        onPhraseCleared();
+        await onPhraseCleared();
       } else {
         setListeningBadge('correct', '\u2705 맞았어요! 다음 음으로...');
         setMessage('\u2705', '정답! (' + state.combo + '콤보)', 'success');
@@ -248,14 +250,14 @@
       }
     } else {
       if (KEYBOARD) KEYBOARD.flashKey(midi, '#f43f5e', 200);
-      Synth.playWrong();
+      await Synth.playWrong();
     }
   }
 
-  function handleWrongNote(midi) {
+  async function handleWrongNote(midi) {
     state.hearts--;
     renderHearts();
-    Synth.playWrong();
+    await Synth.playWrong();
     if (KEYBOARD) KEYBOARD.flashKey(midi, '#f43f5e', 300);
     setListeningBadge('wrong', '\uD83D\uDCA5 틀렸어요!');
     setMessage('\uD83D\uDCA5', '틀렸습니다! 하트를 하나 잃었어요.', 'error');
@@ -264,7 +266,7 @@
     if (state.hearts <= 0) {
       state.isAcceptingInput = false;
       state.phase = 'GAME_OVER';
-      Synth.playGameOver();
+      await Synth.playGameOver();
       setTimeout(() => showResult(), 1000);
     } else {
       state.isAcceptingInput = false;
@@ -275,10 +277,10 @@
     }
   }
 
-  function onPhraseCleared() {
+  async function onPhraseCleared() {
     state.phase = 'PHRASE_NEXT';
     state.isAcceptingInput = false;
-    Synth.playCorrect();
+    await Synth.playCorrect();
     setListeningBadge('correct', '\u2705 프레이즈 클리어!');
     setMessage('\uD83C\uDFAF', '프레이즈 클리어!', 'success');
     state.totalPhrasesCleared++;
@@ -374,7 +376,7 @@
     dom.sheetModalOverlay.classList.remove('open');
   }
 
-  function playSheetDemo(si) {
+  async function playSheetDemo(si) {
     const stage = STAGES.getStage(si);
     if (!stage) return;
     const fullMelody = STAGES.getFullMelody(si);
@@ -382,7 +384,7 @@
     state.isMelodyPlaying = true;
     setListeningBadge('playing', '\uD83D\uDD0A 모범 연주 중...');
     setMessage('\uD83D\uDD0A', '모범 연주를 들어보세요', '');
-    Synth.playMelody(fullMelody, (i, midi) => {
+    await Synth.playMelody(fullMelody, (i, midi) => {
       if (KEYBOARD) KEYBOARD.flashKey(midi, '#f59e0b', 300);
     });
     const td = fullMelody.reduce((a, n) => a + n.duration + (n.gap || 0.08), 0);
@@ -561,8 +563,8 @@
       onKeyDown: (midi, result, touch) => onKeyDownHandler(midi, result, touch),
     });
     KEYBOARD.render();
-    dom.btnStart.addEventListener('click', () => {
-      if (Synth) Synth.getContext();
+    dom.btnStart.addEventListener('click', async () => {
+      if (Synth) await Synth.getContext();
       startGame();
     });
     dom.chanceBtn.addEventListener('click', () => useSheetChance());
