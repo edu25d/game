@@ -93,7 +93,7 @@
   const updateStageUI = (si) => {
     const stage = STAGES.getStage(si);
     if (!stage) return;
-    dom.stageChip.querySelector('.stage-num').textContent = 'STAGE ' + stage.id;
+    dom.stageChip.querySelector('.stage-number').textContent = 'STAGE ' + stage.id;
     dom.songTitle.textContent = stage.title;
   };
 
