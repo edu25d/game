@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": false,
-  "outputDirectory": ".",
-  "static": true,
+  "buildCommand": "node build.js",
+  "outputDirectory": "dist",
   "cache": {
     "paths": []
   },

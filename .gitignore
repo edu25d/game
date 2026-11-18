@@ -1,0 +1,15 @@
+# Vercel 빌드 결과물 (env-config.js 포함 — Supabase 키 포함)
+dist/
+
+# OS 파일
+.DS_Store
+Thumbs.db
+
+# 편집기
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 로그
+*.log
