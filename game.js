@@ -344,7 +344,7 @@
       doOSMDRender(musicXml, si);
     } else {
       const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@0.7.4/dist/opensheetmusicdisplay.bundle.js';
+      script.src = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@0.7.4/build/opensheetmusicdisplay.min.js';
       script.onload = () => doOSMDRender(musicXml, si);
       script.onerror = () => {
         dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 엔진을 불러올 수 없습니다.</div>';
