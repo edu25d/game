@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="orientation" content="landscape">
+  <meta name="supabase-url" content="">
+  <meta name="supabase-anon-key" content="">
+  <title>도레미 절대음감 챌린지</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- 로딩 오버레이 -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">音을 깨우는 중<span class="loading-dots"></span></div>
+  </div>
+
+  <!-- 앱 컨테이너 -->
+  <div class="app-container" id="app">
+
+    <!-- ===== 로비 화면 ===== -->
+    <div id="lobby-view" class="view active">
+      <div class="lobby-logo">
+        <div class="icon">🎹</div>
+        <h1>도레미 절대음감 챌린지</h1>
+        <div class="subtitle">EAR TRAINING · ARCADE CHALLENGE</div>
+      </div>
+
+      <div class="lobby-info-card">
+        <h2>🎯 어떻게 플레이하나요?</h2>
+        <p>
+          컴퓨터가 들려주는 멜로디를 <strong>귀 alone</strong>로 듣고<br>
+          맞히는 순수 청음 아케이드 게임입니다.
+        </p>
+        <div class="features">
+          <span class="feature-tag">5개 스테이지</span>
+          <span class="feature-tag">하트 3개</span>
+          <span class="feature-tag">악보 찬스</span>
+          <span class="feature-tag">콤보 시스템</span>
+          <span class="feature-tag">실시간 랭킹</span>
+          <span class="feature-tag">B3 ~ E5 11건반</span>
+        </div>
+      </div>
+
+      <div class="lobby-ranking">
+        <div class="header">
+          <h3>🏆 명예의 전당 TOP 10</h3>
+          <span id="ranking-source-badge" class="source-badge offline">local</span>
+        </div>
+        <div id="ranking-list" class="ranking-list">
+          <div style="text-align:center; color:var(--text-muted); font-size:0.75rem; padding:8px;">랭킹을 불러오는 중...</div>
+        </div>
+      </div>
+
+      <button id="btn-start" class="btn-start">🎵 도전 시작</button>
+    </div>
+
+    <!-- ===== 인게임 화면 ===== -->
+    <div id="game-view" class="view">
+      <!-- HUD -->
+      <div class="game-hud">
+        <div class="hud-top">
+          <div id="stage-chip" class="stage-chip">
+            <span class="stage-num">STAGE 1</span>
+          </div>
+          <div id="song-title" class="song-title">허수아비 아저씨</div>
+          <div id="listening-badge" class="listening-badge listening">
+            <span>👂</span> <span>소리 청음 중</span>
+          </div>
+        </div>
+        <div class="hud-mid">
+          <div id="heart-slots" class="heart-slots"></div>
+          <button id="chance-btn" class="chance-btn" disabled>
+            <span class="chance-icon">🎼</span>
+            악보 찬스
+            <span class="chance-count" id="chance-count">1</span>
+          </button>
+        </div>
+        <div class="hud-right">
+          <div id="score-display" class="score-display">
+            <span class="score-label">SCORE</span>
+            <span id="score-value">0</span>
+          </div>
+          <div id="combo-chip" class="combo-chip">
+            <span class="combo-num" id="combo-value">x1</span>
+            <span class="combo-fire">🔥</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 중앙 상태 영역 -->
+      <div class="game-center">
+        <div id="state-message" class="state-message">
+          <span class="emoji">🎧</span>
+          게임을 시작하면 첫 멜로디가 재생됩니다
+        </div>
+        <div id="phrase-progress" class="phrase-progress"></div>
+      </div>
+
+      <!-- 건반 영역 -->
+      <div class="keyboard-section">
+        <div id="keyboard-container"></div>
+      </div>
+    </div>
+
+    <!-- ===== 사각 악보 찬스 모달 ===== -->
+    <div id="sheet-modal-overlay" class="sheet-modal-overlay">
+      <div class="sheet-modal">
+        <div class="sheet-modal-header">
+          <h3>🎼 악보 찬스 — 모범 연주 보기</h3>
+          <button id="sheet-modal-close" class="sheet-modal-close">✕</button>
+        </div>
+        <div class="sheet-modal-body">
+          <div id="sheet-container">
+            <div class="sheet-placeholder">악보를 불러오는 중...</div>
+          </div>
+        </div>
+        <div class="sheet-modal-footer">
+          <div class="demo-note">
+            <strong>👂 모범 연주 듣기</strong> — 악보에 따라 음표가 점멸하며 연주됩니다
+          </div>
+          <button id="sheet-demo-btn" class="sheet-demo-btn">▶ 모범 연주</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 결과 화면 ===== -->
+    <div id="result-view" class="view">
+      <div class="result-card">
+        <div class="result-tier">
+          <div id="tier-badge" class="tier-badge cyan">🎶</div>
+          <div class="tier-info">
+            <h2 id="tier-name">초보 음악가</h2>
+            <p id="tier-desc">소리의 세계에 첫 발을 내딛은 리스너</p>
+          </div>
+        </div>
+
+        <div class="result-stats">
+          <div class="stat-item">
+            <span class="stat-label">최종 점수</span>
+            <span id="result-score" class="stat-value cyan">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">최고 콤보</span>
+            <span id="result-combo" class="stat-value violet">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">도달 스테이지</span>
+            <span id="result-stage" class="stat-value amber">Stage 1</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">클리어 곡 수</span>
+            <span id="result-cleared" class="stat-value mint">0</span>
+          </div>
+        </div>
+
+        <div class="result-name-form">
+          <div class="form-title">
+            <span class="arcade-text">⛓ ENTER YOUR NAME ⛓</span>
+            <span>순위 기록에 이름을 남기세요</span>
+          </div>
+          <div class="result-name-input">
+            <input id="name-input" type="text" maxlength="10" placeholder="YOUR NAME" autocomplete="off">
+            <button id="btn-save-score">SAVE</button>
+          </div>
+          <div id="result-save-status" class="result-save-status info"></div>
+        </div>
+
+        <div class="result-actions">
+          <button id="btn-retry" class="btn-retry">🔁 다시 도전하기</button>
+          <button id="btn-share" class="btn-share">📤 결과 공유하기</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 스크립트 ===== -->
+  <script src="audio/synth.js"></script>
+  <script src="keyboard/keyboard.js"></script>
+  <script src="stages.js"></script>
+  <script src="supabase.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
