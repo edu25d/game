@@ -25,19 +25,20 @@ const KEYBOARD = (() => {
   /**
    * 검은건반 정의: [앞 흰건반 인덱스, 음명, MIDI 번호, 반음 오프셋]
    * B3~C5, C5~E5 구간 검은건반
+   * 피아노 건반 배열 규칙에 따라 각 검은건반은 해당 흰건반 위에 위치
    */
   const BLACK_KEYS = [
-    // B3-C4 사이: 없음 (흰건반만)
-    { whiteIndex: 0, name: 'C#4', midi: 61, offset: 0.65 },  // C4 위 (C#4)
-    { whiteIndex: 1, name: 'D#4', midi: 63, offset: 0.65 },  // D4 위 (D#4)
-    // E4-F4 사이: 없음
-    { whiteIndex: 3, name: 'F#4', midi: 66, offset: 0.65 },  // F4 위 (F#4)
-    { whiteIndex: 4, name: 'G#4', midi: 68, offset: 0.65 },  // G4 위 (G#4)
-    // A4-B4 사이: 없음
-    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 0.65 },  // A4 위 (A#4)
+    // C4-D4 사이
+    { whiteIndex: 1, name: 'C#4', midi: 61, offset: 0.5 },  // C4 위 (C#4)
+    { whiteIndex: 2, name: 'D#4', midi: 63, offset: 0.5 },  // D4 위 (D#4)
+    // F4-G4 사이
+    { whiteIndex: 4, name: 'F#4', midi: 66, offset: 0.5 },  // F4 위 (F#4)
+    { whiteIndex: 5, name: 'G#4', midi: 68, offset: 0.5 },  // G4 위 (G#4)
+    // A4-B4 사이
+    { whiteIndex: 6, name: 'A#4', midi: 70, offset: 0.5 },  // A4 위 (A#4)
     // C5-D5 사이
-    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 0.65 },  // C5 위 (C#5)
-    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 0.65 },  // D5 위 (D#5)
+    { whiteIndex: 8, name: 'C#5', midi: 73, offset: 0.5 },  // C5 위 (C#5)
+    { whiteIndex: 9, name: 'D#5', midi: 75, offset: 0.5 },  // D5 위 (D#5)
   ];
 
   const TOTAL_BLACK = BLACK_KEYS.length;
@@ -61,10 +62,10 @@ const KEYBOARD = (() => {
     const containerWidth = container.clientWidth || 400;
     const containerHeight = container.clientHeight || 300;
 
-    // 가용 높이에서 상하 padding(4px×2)과 라벨 공간(22px)을 제외한 건반 목표 높이
-    const availableHeight = containerHeight - 8 - 22;
-    // 건반 높이 = 가용 높이 - 라벨 공간 (라벨과 건반이 영역 안에서 나란히 채워짐)
-    const targetKeyHeight = Math.max(60, availableHeight);
+    // 가용 높이: 상하 padding(4px×2)만 제외, 라벨은 건반 내부에 포함되므로 별도 제외하지 않음
+    const availableHeight = containerHeight - 8;
+    // 건반 높이 = 가용 높이 (세로 공간 최대한 활용)
+    const targetKeyHeight = Math.max(80, availableHeight);
     // 건반 비율(1.7) 기준 너비
     const targetKeyWidthByHeight = targetKeyHeight / 1.7;
     // 컨테이너 너비에 11개 건반이 모두 들어가야 하는 최대 너비 (최소 28px)
