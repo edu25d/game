@@ -63,33 +63,35 @@
 
     <!-- ===== 인게임 화면 ===== -->
     <div id="game-view" class="view">
-      <!-- HUD (상단: 스트림라인 요소 + 하단: 상태 메시지/프레이즈 진행) -->
+      <!-- HUD: 상단 스트림라인(1단) + 하단 상태/프레이즈 진행(2단) -->
       <div class="game-hud">
-        <div class="hud-top">
-          <div id="stage-chip" class="stage-chip">
-            <span class="stage-num">STAGE 1</span>
+        <div class="hud-main">
+          <div class="hud-top">
+            <div id="stage-chip" class="stage-chip">
+              <span class="stage-num">STAGE 1</span>
+            </div>
+            <div id="song-title" class="song-title">허수아비 아저씨</div>
+            <div id="listening-badge" class="listening-badge listening">
+              <span>👂</span> <span>소리 청음 중</span>
+            </div>
           </div>
-          <div id="song-title" class="song-title">허수아비 아저씨</div>
-          <div id="listening-badge" class="listening-badge listening">
-            <span>👂</span> <span>소리 청음 중</span>
+          <div class="hud-mid">
+            <div id="heart-slots" class="heart-slots"></div>
+            <button id="chance-btn" class="chance-btn" disabled>
+              <span class="chance-icon">🎼</span>
+              악보 찬스
+              <span class="chance-count" id="chance-count">1</span>
+            </button>
           </div>
-        </div>
-        <div class="hud-mid">
-          <div id="heart-slots" class="heart-slots"></div>
-          <button id="chance-btn" class="chance-btn" disabled>
-            <span class="chance-icon">🎼</span>
-            악보 찬스
-            <span class="chance-count" id="chance-count">1</span>
-          </button>
-        </div>
-        <div class="hud-right">
-          <div id="score-display" class="score-display">
-            <span class="score-label">SCORE</span>
-            <span id="score-value">0</span>
-          </div>
-          <div id="combo-chip" class="combo-chip">
-            <span class="combo-num" id="combo-value">x1</span>
-            <span class="combo-fire">🔥</span>
+          <div class="hud-right">
+            <div id="score-display" class="score-display">
+              <span class="score-label">SCORE</span>
+              <span id="score-value">0</span>
+            </div>
+            <div id="combo-chip" class="combo-chip">
+              <span class="combo-num" id="combo-value">x1</span>
+              <span class="combo-fire">🔥</span>
+            </div>
           </div>
         </div>
         <div class="hud-bottom">

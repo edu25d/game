@@ -392,25 +392,35 @@ body {
   gap: 0;
 }
 
-/* ── HUD (상단 18%) — 스트림라인 요소 + 하단 상태/프레이즈 진행 ─── */
+/* ── HUD — 상단 1단 스트림라인 + 하단 2단 상태/프레이즈 진행 ─── */
 .game-hud {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 6px 16px 8px;
+  gap: 3px;
+  padding: 4px 12px 4px;
   background: linear-gradient(180deg, rgba(13, 19, 34, 0.95) 0%, rgba(11, 15, 25, 0.7) 100%);
   border-bottom: 1px solid rgba(6, 182, 212, 0.12);
   flex-shrink: 0;
   overflow: hidden;
 }
 
-/* HUD 하단: 상태 메시지 + 프레이즈 진행 점 */
+/* HUD 상단: STAGE + 곡명 + 뱃지 + 하트·찬스 + 점수·콤보 (1단 통합) */
+.hud-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+/* HUD 하단: 상태 메시지 + 프레이즈 진행 점 (2단, 높이 최소화) */
 .hud-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding-top: 4px;
+  gap: 2px;
+  padding-top: 2px;
   border-top: 1px solid rgba(6, 182, 212, 0.08);
   flex-shrink: 0;
 }
@@ -665,7 +675,7 @@ body {
 }
 
 .state-message {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-secondary);
   text-align: center;
@@ -673,9 +683,9 @@ body {
 }
 
 .state-message .emoji {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 
 .state-message.instruction {
@@ -699,8 +709,7 @@ body {
 /* 멜로디 진행 표시 (프레이즈 프래그먼트 바) */
 .phrase-progress {
   display: flex;
-  gap: 3px;
-  margin-top: 10px;
+  gap: 2px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -732,7 +741,7 @@ body {
   animation: shake 0.3s ease;
 }
 
-/* ── 건반 영역 (82%) ─────────────────────────────────────────────── */
+/* ── 건반 영역 (가용 공간 최대한 사용) ─────────────────────────────── */
 .keyboard-section {
   flex: 1;
   min-height: 0;
@@ -740,7 +749,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4px 12px;
+  padding: 2px 8px;
   position: relative;
 }
 
