@@ -809,15 +809,15 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   padding: 2px 8px;
   position: relative;
 }
 
 #keyboard-container {
+  flex: 1;
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -826,12 +826,12 @@ body {
 
 /* 건반 래퍼 */
 #keyboard-wrapper {
+  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
   padding: 4px 0;
   position: relative;
 }

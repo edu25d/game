@@ -255,6 +255,24 @@ const KEYBOARD = (() => {
       'container 높이:', container.getBoundingClientRect().height,
       'keyWidth:', keyWidth, 'keyHeight:', keyHeight);
 
+    // 화면에 디버깅 정보 표시 (iPhone Safari에서도 확인 가능)
+    let debugOverlay = document.getElementById('keyboard-debug-overlay');
+    if (!debugOverlay) {
+      debugOverlay = document.createElement('div');
+      debugOverlay.id = 'keyboard-debug-overlay';
+      debugOverlay.style.cssText = 'position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.85); color: #00ff00; padding: 10px 14px; font-size: 11px; font-family: monospace; z-index: 9999; border-radius: 6px; max-width: 320px; line-height: 1.6; pointer-events: none;';
+      document.body.appendChild(debugOverlay);
+    }
+    const parentHeight = container.parentElement ? container.parentElement.getBoundingClientRect().height : 0;
+    debugOverlay.innerHTML = `
+ container.clientHeight: ${containerHeight}px<br>
+ parent.clientHeight: ${parentHeight}px<br>
+ height: 100% 작동? ${containerHeight >= parentHeight * 0.9 ? 'YES' : 'NO (content 기반)'}<br>
+ keyHeight: ${keyHeight}px | keyWidth: ${keyWidth}px<br>
+ wrapper 높이: ${wrapper.getBoundingClientRect().height}px<br>
+ container 실제 높이: ${container.getBoundingClientRect().height}px
+`.trim();
+
     // ── 이벤트 바인딩 ────────────────────────────────────────────────
     const whiteEls = keysRow.querySelectorAll('.white-key');
     whiteEls.forEach((el) => {
