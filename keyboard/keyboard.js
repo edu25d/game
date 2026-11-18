@@ -63,8 +63,18 @@ const KEYBOARD = (() => {
   function render() {
     if (!container) return;
 
-    const containerWidth = container.clientWidth || 400;
-    const containerHeight = container.clientHeight || 300;
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+
+    // container 크기가 유효하지 않으면 레이아웃 완료 후 재시도 (최대 10회)
+    if (!containerWidth || !containerHeight) {
+      render._retryCount = (render._retryCount || 0) + 1;
+      if (render._retryCount <= 10) {
+        requestAnimationFrame(render);
+        return;
+      }
+      render._retryCount = 0;
+    }
 
     // 가용 높이: 상하 padding(4px×2)만 제외, 라벨은 건반 내부에 포함되므로 별도 제외하지 않음
     const availableHeight = containerHeight - 8;
@@ -184,7 +194,7 @@ const KEYBOARD = (() => {
         width: ${bw}px;
         height: ${bh}px;
         background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 50%, #111122 100%);
-        border-radius: 0 0 4px 4px;
+        border-radius: ${isHalfKey ? '0 0 4px 0' : '0 0 4px 4px'};
         position: absolute;
         top: 0;
         z-index: 3;
