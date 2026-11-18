@@ -535,12 +535,12 @@
     dom.resultCleared = document.getElementById('result-cleared');
     dom.nameInput = document.getElementById('name-input');
     dom.resultSaveStatus = document.getElementById('result-save-status');
+    dom.btnFullscreen = document.getElementById('btn-fullscreen');
   }
 
   function init() {
     // DOM 요소가 아직 없으면 재시도
     if (!document.getElementById('loading-overlay')) {
-      console.log('[init] loading-overlay 없음 — 50ms 후 재시도');
       setTimeout(init, 50);
       return;
     }
@@ -576,6 +576,18 @@
     });
     dom.btnRetry.addEventListener('click', retryGame);
     dom.btnShare.addEventListener('click', shareResult);
+    if (dom.btnFullscreen) {
+      dom.btnFullscreen.addEventListener('click', () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } else {
+          const el = document.documentElement;
+          if (el.requestFullscreen) el.requestFullscreen();
+          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        }
+      });
+    }
     window.addEventListener('resize', () => {
       if (KEYBOARD) KEYBOARD.handleResize();
     });
