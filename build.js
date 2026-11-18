@@ -42,7 +42,7 @@ STATIC_FILES.forEach(f => {
 });
 
 // 서브디렉터리 복사
-['audio', 'keyboard'].forEach(d => {
+['audio', 'keyboard', 'supabase'].forEach(d => {
   const src = path.join(SRC_DIR, d);
   if (fs.existsSync(src)) {
     fs.cpSync(src, path.join(DIST_DIR, d), { recursive: true });
