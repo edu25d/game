@@ -340,12 +340,23 @@
   }
 
   function loadOSMD(musicXml, si) {
-    if (window.OpenSheetMusicDisplay) {
+    if (window.OpenSheetMusicDisplay || window.opensheetmusicdisplay) {
+      // OSMD가 이미 로드되어 있으면 바로 렌더링 (소문자 전역도 대문자로 별칭 처리)
+      if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
+        window.OpenSheetMusicDisplay = window.opensheetmusicdisplay;
+      }
       doOSMDRender(musicXml, si);
     } else {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@0.7.4/build/opensheetmusicdisplay.min.js';
-      script.onload = () => doOSMDRender(musicXml, si);
+      script.onload = () => {
+        // OSMD UMD 빌드는 window.opensheetmusicdisplay(소문자)로 노출되므로
+        // 게임 코드가 사용하는 window.OpenSheetMusicDisplay(카멜케이스)로 별칭 설정
+        if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
+          window.OpenSheetMusicDisplay = window.opensheetmusicdisplay;
+        }
+        doOSMDRender(musicXml, si);
+      };
       script.onerror = () => {
         dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 엔진을 불러올 수 없습니다.</div>';
       };
