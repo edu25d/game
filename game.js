@@ -162,8 +162,11 @@
     renderCombo();
     renderChanceBtn();
     showView('game-view');
-    // 게임 뷰가 표시된 후 건반을 다시 렌더링해야 컨테이너 크기를 올바르게 읽음
-    if (KEYBOARD) KEYBOARD.render();
+    // 게임 뷰가 표시된 후 레이아웃이 완료될 시간을 확보하고 건반 렌더링
+    // setTimeout으로 지연하여 container 크기가 올바르게 측정되도록 함
+    setTimeout(() => {
+      if (KEYBOARD) KEYBOARD.render();
+    }, 50);
     updateStageUI(state.currentStageIndex);
     renderPhraseProgress(state.currentStageIndex, 0);
     setMessage('\uD83E\uDD2F', '첫 멜로디를 듣고 따라 연주해보세요!', 'instruction');

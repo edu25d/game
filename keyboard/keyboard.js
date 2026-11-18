@@ -68,7 +68,7 @@ const KEYBOARD = (() => {
     let containerHeight = container.clientHeight;
     if (containerWidth <= 0 || containerHeight <= 0) {
       render._retryCount = (render._retryCount || 0) + 1;
-      if (render._retryCount <= 10) {
+      if (render._retryCount <= 30) {
         requestAnimationFrame(render);
         return;
       }
