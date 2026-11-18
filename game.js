@@ -553,7 +553,7 @@
       document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--coral);font-family:sans-serif;">게임 모듈을 로드할 수 없습니다.</div>';
       return;
     }
-    SupabaseRank.init();
+    if (SupabaseRank) SupabaseRank.init();
     KEYBOARD.init({
       container: document.getElementById('keyboard-container'),
       onKeyDown: (midi, result, touch) => onKeyDownHandler(midi, result, touch),

@@ -195,3 +195,4 @@ const SupabaseRank = (() => {
 if (typeof exportModules === 'function') {
   exportModules('supabase', SupabaseRank);
 }
+window.SupabaseRank = SupabaseRank;
