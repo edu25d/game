@@ -392,36 +392,33 @@ body {
   gap: 0;
 }
 
-/* ── HUD — 상단 1단 스트림라인 + 하단 2단 상태/프레이즈 진행 ─── */
+/* ── HUD — 좌(스테이지/곡명/청음) + 중(하트/찬스/상태/프레이즈) + 우(점수/콤보) Grid ── */
 .game-hud {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 4px 12px 4px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px 10px;
+  padding: 6px 12px 6px;
+  align-items: start;
   background: linear-gradient(180deg, rgba(13, 19, 34, 0.95) 0%, rgba(11, 15, 25, 0.7) 100%);
   border-bottom: 1px solid rgba(6, 182, 212, 0.12);
   flex-shrink: 0;
   overflow: hidden;
 }
 
-/* HUD 상단: STAGE + 곡명 + 뱃지 + 하트·찬스 + 점수·콤보 (1단 통합) */
-.hud-main {
+/* HUD 중앙 열: 하트·찬스 + 상태 메시지·프레이즈 진행 점 (세로 적층) */
+.hud-center {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
-  overflow: hidden;
+  gap: 3px;
 }
 
-/* HUD 하단: 상태 메시지 + 프레이즈 진행 점 (2단, 높이 최소화) */
+/* HUD 하단: 상태 메시지 + 프레이즈 진행 점 (hud-center 내부 2단) */
 .hud-bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding-top: 2px;
-  border-top: 1px solid rgba(6, 182, 212, 0.08);
   flex-shrink: 0;
 }
 
@@ -602,7 +599,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
   flex-shrink: 0;
 }
 

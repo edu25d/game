@@ -58,19 +58,20 @@ const KEYBOARD = (() => {
   function render() {
     if (!container) return;
 
-    const isLandscape = window.matchMedia('(orientation: landscape)').matches;
     const containerWidth = container.clientWidth || 400;
     const containerHeight = container.clientHeight || 300;
 
-    // 너비 기준: 11개 흰건반이 들어갈 수 있는 최소 폭 (30~48px)
-    const widthBased = Math.max(30, Math.min(48, containerWidth / WHITE_KEYS.length));
-    // 높이 기준: 건반 + 상단 라벨 영역이 들어갈 수 있는 최대 폭 (가용 높이의 약 45%를 건반 너비 환산)
-    const heightBased = Math.max(30, Math.min(60, (containerHeight - 28) / 2.0));
-    // 두 기준 중 더 큰 쪽으로 결정하여 건반이 최대한 크게 보이도록
-    const keyWidth = Math.max(widthBased, heightBased);
+    // 가용 높이에서 상하 padding(4px×2)과 라벨 공간(22px)을 제외한 건반 목표 높이
+    const availableHeight = containerHeight - 8 - 22;
+    // 건반 높이 = 가용 높이 - 라벨 공간 (라벨과 건반이 영역 안에서 나란히 채워짐)
+    const targetKeyHeight = Math.max(60, availableHeight);
+    // 건반 비율(1.7) 기준 너비
+    const targetKeyWidthByHeight = targetKeyHeight / 1.7;
+    // 컨테이너 너비에 11개 건반이 모두 들어가야 하는 최대 너비 (최소 28px)
+    const maxKeyWidthByWidth = Math.max(28, containerWidth / WHITE_KEYS.length);
+    // 두 기준 중 작은 쪽 선택: 높이는 목표대로, 너비는 컨테이너 초과 방지
+    const keyWidth = Math.min(targetKeyWidthByHeight, maxKeyWidthByWidth);
 
-    // 흰건반 총 너비 기반 레이아웃
-    const whiteTotal = keyWidth * WHITE_KEYS.length;
     const wrapper = document.createElement('div');
     wrapper.id = 'keyboard-wrapper';
     wrapper.style.cssText = `
