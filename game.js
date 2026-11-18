@@ -341,19 +341,18 @@
 
   function loadOSMD(musicXml, si) {
     if (window.OpenSheetMusicDisplay || window.opensheetmusicdisplay) {
-      // OSMD가 이미 로드되어 있으면 바로 렌더링 (소문자 전역도 대문자로 별칭 처리)
+      // OSMD UMD 빌드는 window.opensheetmusicdisplay(소문자)로 모듈 객체를 노출하며,
+      // 실제 생성자는 그 객체의 OpenSheetMusicDisplay 프로퍼티다.
       if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
-        window.OpenSheetMusicDisplay = window.opensheetmusicdisplay;
+        window.OpenSheetMusicDisplay = window.opensheetmusicdisplay.OpenSheetMusicDisplay;
       }
       doOSMDRender(musicXml, si);
     } else {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@0.7.4/build/opensheetmusicdisplay.min.js';
       script.onload = () => {
-        // OSMD UMD 빌드는 window.opensheetmusicdisplay(소문자)로 노출되므로
-        // 게임 코드가 사용하는 window.OpenSheetMusicDisplay(카멜케이스)로 별칭 설정
         if (window.opensheetmusicdisplay && !window.OpenSheetMusicDisplay) {
-          window.OpenSheetMusicDisplay = window.opensheetmusicdisplay;
+          window.OpenSheetMusicDisplay = window.opensheetmusicdisplay.OpenSheetMusicDisplay;
         }
         doOSMDRender(musicXml, si);
       };
