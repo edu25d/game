@@ -7,42 +7,7 @@
   'use strict';
   const $ = (id) => document.getElementById(id);
 
-  const dom = {
-    loadingOverlay: $('#loading-overlay'),
-    lobbyView: $('#lobby-view'),
-    gameView: $('#game-view'),
-    resultView: $('#result-view'),
-    btnStart: $('#btn-start'),
-    btnRetry: $('#btn-retry'),
-    btnShare: $('#btn-share'),
-    btnSaveScore: $('#btn-save-score'),
-    stageChip: $('#stage-chip'),
-    songTitle: $('#song-title'),
-    listeningBadge: $('#listening-badge'),
-    heartSlots: $('#heart-slots'),
-    chanceBtn: $('#chance-btn'),
-    chanceCount: $('#chance-count'),
-    scoreValue: $('#score-value'),
-    comboChip: $('#combo-chip'),
-    comboValue: $('#combo-value'),
-    stateMessage: $('#state-message'),
-    phraseProgress: $('#phrase-progress'),
-    sheetModalOverlay: $('#sheet-modal-overlay'),
-    sheetModalClose: $('#sheet-modal-close'),
-    sheetContainer: $('#sheet-container'),
-    sheetDemoBtn: $('#sheet-demo-btn'),
-    resultTierBadge: $('#tier-badge'),
-    resultTierName: $('#tier-name'),
-    resultTierDesc: $('#tier-desc'),
-    resultScore: $('#result-score'),
-    resultCombo: $('#result-combo'),
-    resultStage: $('#result-stage'),
-    resultCleared: $('#result-cleared'),
-    nameInput: $('#name-input'),
-    resultSaveStatus: $('#result-save-status'),
-    rankingList: $('#ranking-list'),
-    rankingSourceBadge: $('#ranking-source-badge'),
-  };
+  const dom = {};
 
   const state = {
     phase: 'LOBBY',
@@ -535,7 +500,50 @@
     startGame();
   }
 
+  function initDom() {
+    dom.loadingOverlay = $('#loading-overlay');
+    dom.lobbyView = $('#lobby-view');
+    dom.gameView = $('#game-view');
+    dom.resultView = $('#result-view');
+    dom.btnStart = $('#btn-start');
+    dom.btnRetry = $('#btn-retry');
+    dom.btnShare = $('#btn-share');
+    dom.btnSaveScore = $('#btn-save-score');
+    dom.stageChip = $('#stage-chip');
+    dom.songTitle = $('#song-title');
+    dom.listeningBadge = $('#listening-badge');
+    dom.heartSlots = $('#heart-slots');
+    dom.chanceBtn = $('#chance-btn');
+    dom.chanceCount = $('#chance-count');
+    dom.scoreValue = $('#score-value');
+    dom.comboChip = $('#combo-chip');
+    dom.comboValue = $('#combo-value');
+    dom.stateMessage = $('#state-message');
+    dom.phraseProgress = $('#phrase-progress');
+    dom.sheetModalOverlay = $('#sheet-modal-overlay');
+    dom.sheetModalClose = $('#sheet-modal-close');
+    dom.sheetContainer = $('#sheet-container');
+    dom.sheetDemoBtn = $('#sheet-demo-btn');
+    dom.resultTierBadge = $('#tier-badge');
+    dom.resultTierName = $('#tier-name');
+    dom.resultTierDesc = $('#tier-desc');
+    dom.resultScore = $('#result-score');
+    dom.resultCombo = $('#result-combo');
+    dom.resultStage = $('#result-stage');
+    dom.resultCleared = $('#result-cleared');
+    dom.nameInput = $('#name-input');
+    dom.resultSaveStatus = $('#result-save-status');
+    dom.rankingList = $('#ranking-list');
+    dom.rankingSourceBadge = $('#ranking-source-badge');
+  }
+
   function init() {
+    // DOM 요소가 아직 없으면 재시도
+    if (!document.getElementById('loading-overlay')) {
+      setTimeout(init, 50);
+      return;
+    }
+    initDom();
     Synth = window.Synth;
     KEYBOARD = window.KEYBOARD;
     STAGES = window.STAGES;
