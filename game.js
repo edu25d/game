@@ -371,16 +371,13 @@
         autoResize: true,
         drawBarNumbers: false,
       });
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(musicXml, 'application/xml');
-      if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
-        dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보 XML을 파싱할 수 없습니다</div>';
-        return;
-      }
-      osmd.load(xmlDoc.documentElement).then(() => {
+      // OSMD load()는 MusicXML 문자열도 직접 받으므로 원시 문자열을 전달
+      // (Element 노드 전달 시 'partwise 요소 없음' 오류가 발생하는 경우 대응)
+      osmd.load(musicXml).then(() => {
         osmd.render();
       }).catch(err => {
         console.error('[OSMD] load/render 실패:', err);
+        console.error('[OSMD] musicXml 미리보기:', musicXml.slice(0, 300));
         dom.sheetContainer.innerHTML = '<div class="sheet-placeholder">악보를 표시할 수 없습니다</div>';
       });
     } catch (e) {
