@@ -82,6 +82,8 @@ body {
   overflow: hidden;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   position: fixed;
   top: 0;
   left: 0;
@@ -93,13 +95,19 @@ body {
     var(--bg-deep);
 }
 
-/* 가로 방향 강제 메타 태그가 있으므로 CSS에서도 보조 */
+/* 가로 방향 권장: 세로 모드에서 회전 안내 표시 */
 @media (orientation: portrait) {
   body::before {
-    content: '';
+    content: '🎵 가로 모드로 돌려주세요';
     position: fixed;
     inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--bg-deep);
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 600;
     z-index: 9999;
   }
   .app-container {
@@ -114,8 +122,10 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: transparent;
 }
 
