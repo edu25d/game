@@ -562,7 +562,7 @@
       container: document.getElementById('keyboard-container'),
       onKeyDown: (midi, result, touch) => onKeyDownHandler(midi, result, touch),
     });
-    KEYBOARD.render();
+    // 건반 렌더링은 game-view가 표시된 후에만 수행 (init 단계에서는 lobby-view만 활성이므로 불필요)
     dom.btnStart.addEventListener('click', async () => {
       if (Synth) await Synth.getContext();
       startGame();
