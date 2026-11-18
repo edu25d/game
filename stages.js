@@ -499,10 +499,25 @@ const STAGES = (() => {
     const BEATS = 4;
     const BEAT_TYPE = 4;
 
+    // MIDI 노트 인덱스(0~11) → 자연수 step 이름 + 변화표(alter)
+    const NATURAL_STEPS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+    // 한 옥타브 내 흰건반(자연음)의 반음 위치: C=0, D=2, E=4, F=5, G=7, A=9, B=11
+    const WHITE_KEY_POSITIONS = [0, 2, 4, 5, 7, 9, 11];
+
     function midiToPitch(midi) {
-      const names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const idx = midi % 12;                     // 옥타브 내 위치 (0~11)
       const octave = Math.floor(midi / 12) - 1;
-      return { step: names[midi % 12], octave };
+      // idx 이하의 가장 큰 흰건반 위치를 찾아 자연수 음명과 변화표를 산출한다.
+      let stepIdx = 0;
+      for (let i = WHITE_KEY_POSITIONS.length - 1; i >= 0; i--) {
+        if (WHITE_KEY_POSITIONS[i] <= idx) {
+          stepIdx = i;
+          break;
+        }
+      }
+      const step = NATURAL_STEPS[stepIdx];
+      const alter = idx - WHITE_KEY_POSITIONS[stepIdx]; // 0=자연, 1=샵, -1=플랫
+      return { step, octave, alter };
     }
 
     function durationToType(duration) {
@@ -510,6 +525,12 @@ const STAGES = (() => {
       if (duration >= 0.45) return 'half';
       if (duration <= 0.32) return 'eighth';
       return 'quarter';
+    }
+
+    function accidentalMark(alter) {
+      if (alter > 0) return 'sharp';
+      if (alter < 0) return 'flat';
+      return null;
     }
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -540,14 +561,17 @@ const STAGES = (() => {
 `;
 
     notes.forEach(n => {
-      const { step, octave } = midiToPitch(n.midi);
+      const { step, octave, alter } = midiToPitch(n.midi);
       const durDiv = Math.max(1, Math.round(n.duration * DIVISIONS));
+      const acc = accidentalMark(alter);
       xml += `
       <note>
         <pitch>
           <step>${step}</step>
           <octave>${octave}</octave>
+          ${alter !== 0 ? `<alter>${alter}</alter>` : ''}
         </pitch>
+        ${acc ? `<accidental>${acc}</accidental>` : ''}
         <duration>${durDiv}</duration>
         <type>${durationToType(n.duration)}</type>
       </note>`;
